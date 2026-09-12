@@ -1,3 +1,20 @@
+# 木块识别系统依赖
+# 安装：python -m pip install -r requirements.txt
+# 或直接运行：python main.py setup（会自动安装 PyTorch CUDA 版与 Ultralytics）
+
+# 基础
 numpy>=2.0
-matplotlib>=3.6
 opencv-python>=4.5
+matplotlib>=3.6
+pillow>=10.0
+
+# 深度学习与检测框架
+# GPU(建议，CUDA 12.8)：
+#   pip install torch==2.9.1 torchvision==0.24.1 --index-url https://download.pytorch.org/whl/cu128
+# CPU：
+#   pip install torch==2.9.1 torchvision==0.24.1
+torch>=2.4
+torchvision>=0.19
+ultralytics>=8.3.0
+
+# 评估与训练辅助（ultralytics 会自动带上 scipy/pyyaml/requests 等）

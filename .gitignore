@@ -15,4 +15,27 @@ __pycache__/
 .env
 .venv
 
+# ---- 数据集与训练产物（体积大，可用 main.py prepare / train 重新生成）----
+data/
+runs/
+snapshots/
+weights/
+Ultralytics/
+.ultralytics/
+.tmp/
+.pipcache/
+camera_detection.log
 
+# 离线下载的 PyTorch wheel（约 2.8 GB），仅受限环境安装用
+models/wheels/
+
+# COCO 预训练权重，首次训练会自动下载
+models/pretrained/
+
+# 只保留最终上线的木块检测模型，其余 .pt 不入库
+models/*.pt
+!models/wood_block_yolo11s.pt
+
+# 本机运行状态（摄像头自动选择结果、临时文件）
+.camera_config.json
+.git-tmp/

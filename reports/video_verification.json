@@ -1,0 +1,32 @@
+{
+ "no_temporal": {
+  "video": "data\\test_block_video.mp4",
+  "temporal": false,
+  "conf": 0.35,
+  "device": "0",
+  "frames": 90,
+  "fps": 30.3,
+  "no_block_frames": 31,
+  "no_block_detected": 0,
+  "no_block_fp_rate": 0.0,
+  "block_frames": 59,
+  "block_detected": 59,
+  "block_recall": 1.0,
+  "saved": null
+ },
+ "with_temporal": {
+  "video": "data\\test_block_video.mp4",
+  "temporal": true,
+  "conf": 0.35,
+  "device": "0",
+  "frames": 90,
+  "fps": 52.6,
+  "no_block_frames": 31,
+  "no_block_detected": 0,
+  "no_block_fp_rate": 0.0,
+  "block_frames": 59,
+  "block_detected": 57,
+  "block_recall": 0.9661,
+  "saved": "reports\\test_video_detected.mp4"
+ }
+}
