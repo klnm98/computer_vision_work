@@ -28,6 +28,7 @@
 | `build_apk.py` | 一键构建 APK（自动设置 JDK/SDK/Gradle 环境变量），产物复制到本地 `dist/`（已 gitignore，不入库） |
 | `release_apk.py` | 创建/更新 GitHub Release 并把 APK 作为附件上传（token 取自 `GITHUB_TOKEN` 或 `.git-tmp/token.txt`，不落盘、不回显） |
 | `verify_release.py` | 只读核验线上 Release 与附件（tag、大小、下载链接） |
+| `verify_repo_files.py` | 只读核验远程仓库根目录文件列表与最近提交（确认删除/新增是否已生效） |
 | `export_onnx.py` | 把训练好的 `.pt` 导出为 ONNX 并校验与 PyTorch 一致（`--reuse` 跳过导出） |
 | `make_onnx_reference.py` | 生成 Android 单测基准值（ONNX 对 block.jpg 的精确输出） |
 | `make_android_test_assets.py` | 生成 Android 单测资源（已 letterbox 的 640×640 输入 + 基准框） |
