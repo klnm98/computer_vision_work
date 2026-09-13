@@ -42,6 +42,10 @@ CameraX 实时取帧 + ONNX Runtime 推理，**与桌面端同一个模型、同
 # 0) 安装依赖（自动装 PyTorch CUDA 版 + Ultralytics）
 python main.py setup
 
+# 环境自检：确认依赖与 GPU 可用，并跑通一次识别
+python main.py setup            # 检查依赖与 GPU
+python main.py image block.jpg  # 用示例图跑通识别，验证环境与模型
+
 # 1) 下载公开数据集并构建训练集（约 2 GB 图片 + 0.66 GB 标注包）
 python main.py prepare
 
