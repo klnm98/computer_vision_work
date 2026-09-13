@@ -13,6 +13,17 @@
 
 ## 1. 快速开始
 
+### 手机端（Android APK，开箱即用）
+
+```
+dist/wood_block_detector_debug.apk      # 约 70 MB，传到手机点击安装即可
+```
+
+CameraX 实时取帧 + ONNX Runtime 推理，**与桌面端同一个模型、同一套阈值和后处理**；
+支持实时识别、相册选图、内置示例图、置信度阈值调节。详见 [`android/README.md`](android/README.md)。
+
+### 桌面端
+
 ```bash
 # 0) 安装依赖（自动装 PyTorch CUDA 版 + Ultralytics）
 python main.py setup
@@ -124,17 +135,23 @@ woodblock/
   paths.py                 # 路径与参数
   sources.py               # 公开数据集来源与引用信息
   remote_zip.py            # HTTP Range 远程读取 ZIP 内单个文件
-  dataset.py               # 数据集扫描 / 拉取 / 构建 / 缺角增强
+  dataset.py               # 数据集扫描 / 拉取 / 构建 / 缺角/遮挡/近景增强
   train.py                 # 训练
   evaluate.py              # 评估与阈值标定
-  detector.py              # 推理封装（含时序确认）
+  detector.py              # 推理封装（含多尺度与时序确认）
   image_utils.py           # 图像小工具（去黑边等）
   env_setup.py             # 依赖安装
-tools/                     # 开发/调试脚本
+  compat.py                # 受限环境兼容（无多进程的标注扫描）
+android/                   # 手机端 Android 工程（CameraX + ONNX Runtime）
+  app/src/main/java/...    #   MainActivity / WoodBlockDetector / YoloPostProcess / OverlayView
+  app/src/main/assets/     #   导出的 ONNX 模型 + 示例图片
+  app/src/test/java/...    #   JVM 单测：验证与桌面端结果一致
+tools/                     # 开发/调试/构建脚本
 data/                      # 数据集（自动生成，已 gitignore）
 models/                    # 预训练与训练好的权重
 reports/                   # 评估报告与可视化结果
 runs/                      # 训练过程输出
+dist/                      # 构建出的 APK（已 gitignore，本地保留）
 ```
 
 ---

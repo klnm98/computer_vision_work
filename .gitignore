@@ -36,6 +36,23 @@ models/pretrained/
 models/*.pt
 !models/wood_block_yolo11s.pt
 
+# ONNX 只保留 Android 工程 assets 里那一份（APK 构建直接用），避免重复入库
+models/*.onnx
+
 # 本机运行状态（摄像头自动选择结果、临时文件）
 .camera_config.json
 .git-tmp/
+
+# ---- Android 构建产物与本地工具链（体积大，可重新生成）----
+.android-build/
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+dist/
+
+# 注意：android/app/src/main/assets/wood_block_yolo11s.onnx（36 MB）**保留入库**，
+# 这样 clone 后只要装好 Android 工具链就能直接构建 APK；
+# 如需重新导出：python tools/export_onnx.py
+

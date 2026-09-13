@@ -1,0 +1,95 @@
+{
+ "fp32": "wood_block_yolo11s.onnx",
+ "fp32_mb": 37.9,
+ "int8": null,
+ "int8_mb": null,
+ "verify": {
+  "rows": [
+   {
+    "image": "block.jpg",
+    "pytorch": 1,
+    "onnx": 1,
+    "matched": 1,
+    "worst_iou": 0.978,
+    "onnx_conf": [
+     0.83
+    ],
+    "pt_conf": [
+     0.837
+    ]
+   },
+   {
+    "image": "000001.png",
+    "pytorch": 0,
+    "onnx": 0,
+    "matched": 0,
+    "worst_iou": null,
+    "onnx_conf": [],
+    "pt_conf": []
+   },
+   {
+    "image": "000036.png",
+    "pytorch": 0,
+    "onnx": 0,
+    "matched": 0,
+    "worst_iou": null,
+    "onnx_conf": [],
+    "pt_conf": []
+   },
+   {
+    "image": "000047.png",
+    "pytorch": 0,
+    "onnx": 0,
+    "matched": 0,
+    "worst_iou": null,
+    "onnx_conf": [],
+    "pt_conf": []
+   },
+   {
+    "image": "000083.png",
+    "pytorch": 0,
+    "onnx": 0,
+    "matched": 0,
+    "worst_iou": null,
+    "onnx_conf": [],
+    "pt_conf": []
+   },
+   {
+    "image": "000112.png",
+    "pytorch": 0,
+    "onnx": 0,
+    "matched": 0,
+    "worst_iou": null,
+    "onnx_conf": [],
+    "pt_conf": []
+   },
+   {
+    "image": "001024.png",
+    "pytorch": 0,
+    "onnx": 0,
+    "matched": 0,
+    "worst_iou": null,
+    "onnx_conf": [],
+    "pt_conf": []
+   },
+   {
+    "image": "001027.png",
+    "pytorch": 0,
+    "onnx": 0,
+    "matched": 0,
+    "worst_iou": null,
+    "onnx_conf": [],
+    "pt_conf": []
+   },
+   {
+    "image": "001059.png",
+    "pytorch": 0,
+    "onnx": 0,
+    "matched": 0,
+    "worst_iou": null,
+    "onnx_conf": [],
+    "pt_conf": []
+   }
+  ]
+ }
+}

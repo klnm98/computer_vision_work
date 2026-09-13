@@ -20,6 +20,20 @@
 | `check_camera_open.py` | 验证 `open_source` 选到的组合能连续出图（打印亮度/标准差，非黑屏） |
 | `test_camera_recovery.py` | 用桩对象模拟"选到黑屏组合"，验证运行中自动重新选择摄像头的逻辑不会卡死 |
 
+## Android / APK 构建
+| 脚本 | 用途 |
+| --- | --- |
+| `setup_android_toolchain.py` | 下载安装 JDK 17 + Gradle + cmdline-tools（放在 `.android-build/`，不动系统环境） |
+| `install_android_sdk_direct.py` | 直接下载 platform-tools / build-tools 34 / android-34（绕开 sdkmanager 的 Java 网络问题），并把系统根证书导入自带 JDK |
+| `build_apk.py` | 一键构建 APK（自动设置 JDK/SDK/Gradle 环境变量），产物复制到 `dist/` |
+| `export_onnx.py` | 把训练好的 `.pt` 导出为 ONNX 并校验与 PyTorch 一致（`--reuse` 跳过导出） |
+| `make_onnx_reference.py` | 生成 Android 单测基准值（ONNX 对 block.jpg 的精确输出） |
+| `make_android_test_assets.py` | 生成 Android 单测资源（已 letterbox 的 640×640 输入 + 基准框） |
+| `probe_android_build.py` / `probe_maven_mirror.py` | 探测 Android 构建所需主机与 Maven 镜像可用性 |
+| `find_sdk_zips.py` | 从 Google 仓库清单查 SDK 组件的真实 zip 文件名 |
+| `push_remote.py` | 受限网络下推送代码（处理 TLS 证书，可选 `.git-tmp/token.txt` 提供 PAT） |
+| `export_ca.py` | 把系统根证书导出为 PEM，供 git(OpenSSL) 等使用 |
+
 ## 远程数据访问
 | 脚本 | 用途 |
 | --- | --- |

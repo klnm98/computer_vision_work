@@ -56,6 +56,12 @@ def download(url: str, dest: str, chunk: int = 4 << 20) -> None:
                             speed = have / max(now - t_start, 1e-6) / 1e6
                             tail = f"/{total/1e6:.1f}" if total else ""
                             print(f"  {have/1e6:8.1f}{tail} MB  {speed:5.2f} MB/s", flush=True)
+        except urllib.error.HTTPError as e:
+            if 400 <= e.code < 500:      # 4xx 重试没有意义（文件名错/资源不存在）
+                raise RuntimeError(f"下载失败 HTTP {e.code}: {url}") from e
+            print(f"  第 {attempt} 次中断（HTTP {e.code}），3 秒后续传 ...", flush=True)
+            time.sleep(3)
+            continue
         except (urllib.error.URLError, TimeoutError, ConnectionError, OSError) as e:
             print(f"  第 {attempt} 次中断（{type(e).__name__}: {str(e)[:60]}），3 秒后续传 ...", flush=True)
             time.sleep(3)

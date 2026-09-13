@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">木块识别</string>
+    <string name="loading_model">正在加载模型（约 38 MB，首次稍慢）…</string>
+    <string name="model_ready">模型就绪（%1$d ms）</string>
+    <string name="model_failed">模型加载失败：%1$s</string>
+    <string name="status_live">实时识别中：把木块放进画面</string>
+    <string name="status_still">静态图片检测结果</string>
+    <string name="conf_label">置信度阈值</string>
+    <string name="conf_value">%.2f</string>
+    <string name="count_fmt">木块：%1$d</string>
+    <string name="count_fmt_zero">木块：0</string>
+    <string name="fps_fmt">%.1f FPS</string>
+    <string name="btn_switch">切换镜头</string>
+    <string name="btn_gallery">相册选图</string>
+    <string name="btn_demo">示例图片</string>
+    <string name="btn_camera">回到摄像头</string>
+    <string name="demo_done">示例图片检测到 %1$d 个木块</string>
+</resources>
