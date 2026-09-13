@@ -5,8 +5,19 @@
 
 ## 直接安装（推荐）
 
-1. 把 `dist/wood_block_detector_debug.apk`（约 70 MB）传到手机
-   （微信/QQ 传文件、数据线、网盘都可以）。
+APK 不在仓库里（构建产物不入库），请到 **Releases** 页面下载：
+
+**➡️ [下载最新版 APK](https://github.com/klnm98/computer_vision_work/releases/latest)**
+
+| 项目 | 值 |
+| --- | --- |
+| 文件 | `wood_block_detector_debug.apk`（约 70 MB） |
+| 直链（v1.0.0） | `https://github.com/klnm98/computer_vision_work/releases/download/v1.0.0/wood_block_detector_debug.apk` |
+| SHA256 | `e19e51e43894e47132a762ac04e339207ea5d0a56d5b3e1c6e33095f13c8721f` |
+
+安装步骤：
+
+1. 下载 APK 并传到手机（微信/QQ 传文件、数据线、网盘都可以）。
 2. 手机上点开这个 APK，按提示允许「安装未知应用」（设置 → 应用 → 特殊权限）。
 3. 安装后打开「木块识别」，首次进入会请求相机权限，允许即可。
 
@@ -59,8 +70,15 @@ python tools/build_apk.py --test
 ```bash
 python tools/setup_android_toolchain.py        # JDK + Gradle + cmdline-tools
 python tools/install_android_sdk_direct.py     # platform-tools / build-tools 34 / android-34
-python tools/build_apk.py --test               # 跑单测并打包，产物在 dist/
+python tools/build_apk.py --test               # 跑单测并打包，产物在本地 dist/（不入库）
 python tools/build_apk.py --release            # 需要签名时用（见下）
+```
+
+打包完成后 APK 在本地 `dist/wood_block_detector_debug.apk`（该目录已 gitignore）。
+想把它发布到 Releases 给手机下载：
+
+```bash
+python tools/release_apk.py --tag v1.1.0 --notes-file RELEASE_NOTES.md
 ```
 
 模型来自 `android/app/src/main/assets/wood_block_yolo11s.onnx`，由桌面端权重导出：

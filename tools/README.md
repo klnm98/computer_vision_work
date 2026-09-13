@@ -25,7 +25,9 @@
 | --- | --- |
 | `setup_android_toolchain.py` | 下载安装 JDK 17 + Gradle + cmdline-tools（放在 `.android-build/`，不动系统环境） |
 | `install_android_sdk_direct.py` | 直接下载 platform-tools / build-tools 34 / android-34（绕开 sdkmanager 的 Java 网络问题），并把系统根证书导入自带 JDK |
-| `build_apk.py` | 一键构建 APK（自动设置 JDK/SDK/Gradle 环境变量），产物复制到 `dist/` |
+| `build_apk.py` | 一键构建 APK（自动设置 JDK/SDK/Gradle 环境变量），产物复制到本地 `dist/`（已 gitignore，不入库） |
+| `release_apk.py` | 创建/更新 GitHub Release 并把 APK 作为附件上传（token 取自 `GITHUB_TOKEN` 或 `.git-tmp/token.txt`，不落盘、不回显） |
+| `verify_release.py` | 只读核验线上 Release 与附件（tag、大小、下载链接） |
 | `export_onnx.py` | 把训练好的 `.pt` 导出为 ONNX 并校验与 PyTorch 一致（`--reuse` 跳过导出） |
 | `make_onnx_reference.py` | 生成 Android 单测基准值（ONNX 对 block.jpg 的精确输出） |
 | `make_android_test_assets.py` | 生成 Android 单测资源（已 letterbox 的 640×640 输入 + 基准框） |

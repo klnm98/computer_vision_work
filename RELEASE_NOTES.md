@@ -1,10 +1,19 @@
 # v1.0.0 · 木块识别（桌面端 + Android APK）
 
+## ⬇️ 直接下载 APK
+
+**➡️ [点击下载 wood_block_detector_debug.apk（70.4 MB）](https://github.com/klnm98/computer_vision_work/releases/download/v1.0.0/wood_block_detector_debug.apk)**
+
+> 链接点不动的话，往下滚到本页**最底部的 `Assets` 折叠框**，
+> 那里有同一个 `wood_block_detector_debug.apk`（GitHub 的发布附件总是显示在说明正文下方）。
+
+安装：下载后点开 APK → 按提示允许「安装未知应用」→ 打开「木块识别」→ 允许相机权限。
+
 用**真实、公开数据集**训练的单类别木块检测器：桌面端摄像头实时识别 + 手机端 APK。
 
 ## 下载与安装（手机）
 
-1. 下载下面的 **`wood_block_detector_debug.apk`**（70.4 MB）
+1. 下载 **`wood_block_detector_debug.apk`**（70.4 MB）
 2. 传到手机后点击安装，按提示允许「安装未知应用」
 3. 打开「木块识别」，允许相机权限即可
 
@@ -53,7 +62,7 @@ App 内功能：实时摄像头识别（带 N-of-M 时序确认）、相册选�
 ```bash
 python tools/setup_android_toolchain.py     # JDK 17 + Gradle + cmdline-tools（装在 .android-build/）
 python tools/install_android_sdk_direct.py  # platform-tools / build-tools 34 / android-34
-python tools/build_apk.py --test            # 跑单测并打包，产物在 dist/
+python tools/build_apk.py --test            # 跑单测并打包，产物在本地 dist/（构建产物不入库）
 ```
 
 ## 已知限制

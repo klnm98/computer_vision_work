@@ -1,8 +1,14 @@
 # 木块识别系统（Wooden Block Detection）
 
+[![Release](https://img.shields.io/github/v/release/klnm98/computer_vision_work?label=release&color=2e7d32)](https://github.com/klnm98/computer_vision_work/releases/latest)
+[![Dataset](https://img.shields.io/badge/dataset-YCB--Video%20%2F%20BOP-blue)](#2-数据集真实公开)
+
 用**真实、公开的数据集**训练一个深度学习目标检测模型，在摄像头画面中准确
 框选出木块（类似 `block.jpg` 中的木块），并保证**不会框到其他物体**，
 木块**缺角时依然能识别**。
+
+**手机直接用**：到 [Releases](https://github.com/klnm98/computer_vision_work/releases/latest) 下载 APK 安装
+（构建产物不入库，仓库里没有 `dist/` 目录）。
 
 > 与原来的 `detect_camera.py`（Otsu 二值化 + 轮廓 + 长宽比）不同：
 > 规则法依赖"木块与背景颜色/亮度差异明显"，而 `block.jpg` 里的木块与木桌
@@ -15,12 +21,20 @@
 
 ### 手机端（Android APK，开箱即用）
 
-```
-dist/wood_block_detector_debug.apk      # 约 70 MB，传到手机点击安装即可
-```
+APK 不在仓库里（构建产物不入库），请到 **Releases** 页面下载：
+
+**➡️ [下载最新版 APK](https://github.com/klnm98/computer_vision_work/releases/latest)**
+
+直链（v1.0.0）：
+`https://github.com/klnm98/computer_vision_work/releases/download/v1.0.0/wood_block_detector_debug.apk`
+
+安装：传到手机 → 点击安装 → 允许「安装未知应用」→ 打开后允许相机权限。
+要求 Android 7.0+，已含 `arm64-v8a` 与 `armeabi-v7a`。
 
 CameraX 实时取帧 + ONNX Runtime 推理，**与桌面端同一个模型、同一套阈值和后处理**；
 支持实时识别、相册选图、内置示例图、置信度阈值调节。详见 [`android/README.md`](android/README.md)。
+
+> 想自己从源码出包：`python tools/build_apk.py --test`，产物会生成在本地 `dist/`（该目录已 gitignore，不会进仓库）。
 
 ### 桌面端
 
@@ -147,12 +161,14 @@ android/                   # 手机端 Android 工程（CameraX + ONNX Runtime�
   app/src/main/assets/     #   导出的 ONNX 模型 + 示例图片
   app/src/test/java/...    #   JVM 单测：验证与桌面端结果一致
 tools/                     # 开发/调试/构建脚本
-data/                      # 数据集（自动生成，已 gitignore）
-models/                    # 预训练与训练好的权重
+RELEASE_NOTES.md           # 各版本发布说明（发 Release 时使用）
+models/                    # 上线模型 wood_block_yolo11s.pt（随仓库提供）
 reports/                   # 评估报告与可视化结果
-runs/                      # 训练过程输出
-dist/                      # 构建出的 APK（已 gitignore，本地保留）
 ```
+
+> 以下目录**不在仓库里**，都是本地自动生成的（已 gitignore）：
+> `data/`（数据集，约 5 GB）、`runs/`（训练过程）、`dist/`（构建出的 APK）、
+> `models/pretrained/`、`models/wheels/`、`android/app/build/`、`.android-build/`（Android 工具链）。
 
 ---
 
@@ -323,9 +339,35 @@ python detect_camera.py --rescan    # 忽略记忆，重新自检
 `models/pretrained/` 里已放好 `yolo11s.pt`（COCO 预训练），若该文件存在就不会
 再去下载。
 
+**Q: 仓库里为什么没有 `dist/`、APK 要去哪里拿？**
+APK 属于构建产物，不入库（`data/`、`runs/`、`dist/`、`.android-build/` 等都已在
+`.gitignore` 中）。请从 **[Releases](https://github.com/klnm98/computer_vision_work/releases/latest)**
+下载；自己出包也只需 `python tools/build_apk.py --test`，产物会落在本机 `dist/`。
+
 ---
 
-## 7. 受限运行环境说明（可选阅读）
+## 7. 打包与发布（维护者）
+
+```bash
+# 1) 构建 APK（首次会先把 JDK/SDK/Gradle 装到 .android-build/）
+python tools/setup_android_toolchain.py
+python tools/install_android_sdk_direct.py
+python tools/build_apk.py --test        # 跑单测并打包 -> 本地 dist/
+
+# 2) 发布到 GitHub Releases（自动上传 dist/ 里的附件）
+#    凭据：环境变量 GITHUB_TOKEN，或放到 .git-tmp/token.txt（已被 gitignore）
+python tools/release_apk.py --tag v1.1.0 --name "v1.1.0 说明" --notes-file RELEASE_NOTES.md
+python tools/verify_release.py          # 只读核验线上 Release 与附件
+```
+
+也可以直接用网页：打开
+[Releases → Draft a new release](https://github.com/klnm98/computer_vision_work/releases/new)，
+填/新建 tag，把 `RELEASE_NOTES.md` 的内容粘到说明里，再把 `dist/*.apk` 拖进附件框即可。
+脚本的口诀是：**说明改 `RELEASE_NOTES.md`，附件来自 `dist/`，两者都不进仓库**。
+
+---
+
+## 8. 受限运行环境说明（可选阅读）
 
 本仓库在只能写工作区、且禁止命名管道通信的沙箱环境里也能跑通，为此做了三处
 **兼容处理**（在普通环境下这些处理是无害的，可以忽略）：
