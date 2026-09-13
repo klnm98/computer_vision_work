@@ -47,10 +47,24 @@ def export_system_ca() -> str:
 
 
 def make_askpass() -> str:
-    """生成一个 askpass 脚本：从 .git-tmp/token.txt 读取 token 交给 git。"""
+    """生成 askpass 脚本：从 .git-tmp/token.txt 读取 token 交给 git。
+
+    Windows 上 git 无法直接执行 .py（Exec format error），所以用 .bat 包装；
+    token 只存在于文件里，不会出现在命令行参数或日志中。
+    """
+    bat = os.path.join(TMP, "askpass.bat")
+    with open(bat, "w", encoding="ascii", newline="\r\n") as f:
+        f.write("@echo off\r\n")
+        f.write("setlocal\r\n")
+        f.write("set \"P=%~1\"\r\n")
+        f.write(f"set /p TOK=<\"{TOKEN_FILE}\"\r\n")
+        f.write("echo %P% | findstr /I \"username\" >nul\r\n")
+        f.write("if not errorlevel 1 (echo x-access-token) else (echo %TOK%)\r\n")
+
+    # 非 Windows 环境用的 .py 版本
     with open(ASKPASS, "w", encoding="utf8") as f:
         f.write(
-            "import os, sys\n"
+            "import sys\n"
             f"p = r'{TOKEN_FILE}'\n"
             "prompt = (sys.argv[1] if len(sys.argv) > 1 else '').lower()\n"
             "try:\n"
@@ -59,10 +73,9 @@ def make_askpass() -> str:
             "    tok = ''\n"
             "if not tok:\n"
             "    sys.exit(1)\n"
-            "# 用户名提示返回占位符，密码提示返回 token\n"
             "print('x-access-token' if 'username' in prompt and 'password' not in prompt else tok)\n"
         )
-    return ASKPASS
+    return bat if os.name == "nt" else ASKPASS
 
 
 def main() -> int:
@@ -80,12 +93,19 @@ def main() -> int:
         raise SystemExit("无法确定当前分支，请显式指定，例如：python tools/push_remote.py main")
 
     ca = export_system_ca()
-    cmd = ["git", "-c", "http.sslBackend=openssl", "-c", f"http.sslCAInfo={ca}"]
+    # credential.helper= 置空：沙箱里凭据助手（GCM）会因命名管道被拒而失败，直接用 askpass
+    # http.version=HTTP/1.1 + 大 postBuffer：避免大对象推送时被中间设备重置连接
+    cmd = ["git", "-c", "http.sslBackend=openssl", "-c", f"http.sslCAInfo={ca}",
+           "-c", "credential.helper=", "-c", "http.version=HTTP/1.1",
+           "-c", "http.postBuffer=524288000", "-c", "http.lowSpeedLimit=0",
+           "-c", "http.lowSpeedTime=999999"]
     env = dict(os.environ, GIT_TERMINAL_PROMPT="1")
     if os.path.exists(TOKEN_FILE) and os.path.getsize(TOKEN_FILE) > 0:
         print(f"[推送] 使用 {TOKEN_FILE} 中的 token 鉴权（不会打印 token 本身）")
-        cmd += ["-c", f"core.askPass={make_askpass()}"]
-        env["GIT_ASKPASS"] = ASKPASS
+        ask = make_askpass()
+        cmd += ["-c", f"core.askPass={ask}"]
+        env["GIT_ASKPASS"] = ask
+        env["SSH_ASKPASS"] = ask
         env.pop("GCM_INTERACTIVE", None)
     else:
         print("[推送] 未找到 .git-tmp/token.txt，将使用系统凭据助手（可能弹登录窗口）")
@@ -97,7 +117,14 @@ def main() -> int:
     cmd += [args.remote, f"refs/heads/{branch}:refs/heads/{branch}"]
 
     print("[推送] 执行：", " ".join(c if not c.startswith("http") else c for c in cmd))
-    rc = subprocess.run(cmd, cwd=ROOT, env=env).returncode
+    rc = 1
+    for attempt in range(1, 4):
+        rc = subprocess.run(cmd, cwd=ROOT, env=env).returncode
+        if rc == 0:
+            break
+        if attempt < 3:
+            print(f"[推送] 第 {attempt} 次失败（退出码 {rc}），10 秒后重试 ...")
+            time.sleep(10)
     if rc == 0:
         print(f"[推送] 成功：{args.remote}/{branch}"
               + ("（dry-run，未真正修改远程）" if args.dry_run else ""))
